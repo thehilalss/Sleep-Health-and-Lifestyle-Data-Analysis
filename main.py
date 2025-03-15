@@ -107,8 +107,6 @@ df2 = pd.DataFrame({
 merged_df = df.merge(df2, left_index=True, right_on='Person ID', how='inner')
 print(merged_df.head())
 
-import pandas as pd
-import numpy as np
 
 # Eksik verileri kontrol ettim
 print(df.isnull().sum())
