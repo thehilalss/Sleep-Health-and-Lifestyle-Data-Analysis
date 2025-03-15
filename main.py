@@ -111,19 +111,20 @@ print(merged_df.head())
 # Eksik verileri kontrol ettim
 print(df.isnull().sum())
 
-# Sadece sayısal sütunlar için eksik verileri doldur
+# Sadece sayısal sütunlar için eksik verileri doldurdum
 numeric_cols = df.select_dtypes(include=[np.number]).columns
 df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].mean())
 
-# Kategorik sütunlar için eksik verileri mod ile doldur
+# Kategorik sütunlar için eksik verileri mod ile doldurdum
 categorical_cols = df.select_dtypes(include=['object']).columns
 for col in categorical_cols:
     mode_value = df[col].mode()[0]  # Mod değerini hesapla
     df[col] = df[col].fillna(mode_value)  # Mod ile doldur
 
-# Veri tiplerini kontrol et ve gerekirse dönüştür
+# Veri tiplerini kontrol et ve gerekirse dönüştür çünkü farklı veri tipleri olduğunda ki numeric olmayan verilerse bunlar hata alıyoruz
+
 df['Heart Rate'] = pd.to_numeric(df['Heart Rate'], errors='coerce')
 df['Blood Pressure'] = pd.to_numeric(df['Blood Pressure'].str.replace('/', ''), errors='coerce')
 
-# Son durumu kontrol et
+# Son durumu kontrol ettim
 print(df.isnull().sum())
