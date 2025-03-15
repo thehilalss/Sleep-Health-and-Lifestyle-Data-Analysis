@@ -107,13 +107,25 @@ df2 = pd.DataFrame({
 merged_df = df.merge(df2, left_index=True, right_on='Person ID', how='inner')
 print(merged_df.head())
 
+import pandas as pd
+import numpy as np
+
 # Eksik verileri kontrol ettim
 print(df.isnull().sum())
 
-# Eksik verileri ortalama ile doldurdum
-df.fillna(df.mean(), inplace=True)
+# Sadece sayısal sütunlar için eksik verileri doldur
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].mean())
 
-# One-Hot Encoding
-df['Gender'] = df['Gender'].map({'Male': 0, 'Female': 1})
+# Kategorik sütunlar için eksik verileri mod ile doldur
+categorical_cols = df.select_dtypes(include=['object']).columns
+for col in categorical_cols:
+    mode_value = df[col].mode()[0]  # Mod değerini hesapla
+    df[col] = df[col].fillna(mode_value)  # Mod ile doldur
 
-print(df.head())
+# Veri tiplerini kontrol et ve gerekirse dönüştür
+df['Heart Rate'] = pd.to_numeric(df['Heart Rate'], errors='coerce')
+df['Blood Pressure'] = pd.to_numeric(df['Blood Pressure'].str.replace('/', ''), errors='coerce')
+
+# Son durumu kontrol et
+print(df.isnull().sum())
